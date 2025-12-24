@@ -1,0 +1,1774 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crixus Sarsing Restaurant</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Playfair Display', 'Georgia', serif;
+        }
+        
+        .menu-background {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
+            min-height: 100%;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .floating-orbs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .orb:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .orb:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+        
+        .orb:nth-child(3) {
+            width: 180px;
+            height: 180px;
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 6s;
+        }
+        
+        .orb:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            right: 30%;
+            animation-delay: 9s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            50% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+            75% {
+                transform: translate(20px, 30px) scale(1.05);
+            }
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .category-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 250, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 0;
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+            cursor: pointer;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .category-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .category-content {
+            padding: 20px;
+        }
+        
+        .item-card {
+            background: linear-gradient(135deg, #ffffff, #fafafa);
+            border-radius: 20px;
+            padding: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.12);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        
+        .item-image-container {
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .item-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .item-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+            color: #1a1a2e;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 22px;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            font-family: 'Georgia', serif;
+        }
+        
+        .back-button {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            font-size: 16px;
+        }
+        
+        .language-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .lang-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            color: #d4af37;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+            color: #1a1a2e;
+            border-color: #d4af37;
+        }
+        
+        #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        #modal-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.5);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            color: #d4af37;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div class="menu-background h-full w-full overflow-auto">
+   <div class="floating-orbs">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+   </div>
+   <div class="content-wrapper" style="max-width: 1400px; margin: 0 auto; padding: 40px;">
+    <header style="text-align: center; margin-bottom: 50px;">
+     <h1 id="restaurant-title" style="font-size: 72px; font-weight: bold; color: #d4af37; text-shadow: 3px 3px 6px rgba(212, 175, 55, 0.3); margin-bottom: 5px; letter-spacing: 8px;">CRIXUS</h1>
+     <p style="font-size: 28px; color: #d4af37; letter-spacing: 6px; font-style: italic; margin-bottom: 20px;">SARSING</p>
+     <div class="language-selector" style="justify-content: center; margin-top: 30px;"><button class="lang-btn active" onclick="changeLanguage('en')" data-lang="en">English</button> <button class="lang-btn" onclick="changeLanguage('ar')" data-lang="ar">العربية</button> <button class="lang-btn" onclick="changeLanguage('tr')" data-lang="tr">Türkçe</button> <button class="lang-btn" onclick="changeLanguage('ku')" data-lang="ku">کوردی</button>
+     </div>
+    </header>
+    <div id="main-menu" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 35px;">
+    </div>
+    <div id="category-details" style="display: none;"><button class="back-button" onclick="showMainMenu()" style="margin-bottom: 30px;"> <span data-translate="back">← Back to Menu</span> </button>
+     <h2 id="category-title" style="color: #d4af37; font-size: 42px; margin-bottom: 40px; text-align: center; letter-spacing: 3px;"></h2>
+     <div id="items-container"></div>
+    </div>
+   </div>
+  </div>
+  <div id="image-modal" onclick="closeModal()"><span class="close-modal">×</span> <img id="modal-image" src="" alt="Full size image">
+  </div>
+  <script>
+        const defaultConfig = {
+            restaurant_name: "CRIXUS",
+            welcome_text: "Welcome to Our Exclusive Menu",
+            primary_color: "#d4af37",
+            background_color: "#ffffff",
+            text_color: "#333333",
+            card_color: "#ffffff",
+            accent_color: "#ffd700"
+        };
+
+        let currentLanguage = 'en';
+        
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            modalImage.src = imageSrc;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('image-modal').style.display = 'none';
+        }
+
+        function getImageForCategory(category) {
+            const images = {
+                hotDrinks: '1.jpg',
+                coldDrinks: '1.jpg',
+                appetizer: '1.jpg',
+                soup: '1.jpg',
+                mainCourse: '1.jpg',
+                deserts: '1.jpg',
+                sandwiches: '1.jpg',
+                pasta: '1.jpg',
+                pizza: '1.jpg',
+                hookhas: '1.jpg',
+                beer: '1.jpg',
+                redWine: '1.jpg',
+                whiteWine: '1.jpg',
+                whisky: '1.jpg',
+                raki: '1.jpg',
+                rom: '1.jpg',
+                cognac: '1.jpg',
+                liqur: '1.jpg',
+                vodka: '1.jpg',
+                cocktails: '1.jpg',
+                vermouth: '1.jpg',
+                tequila: '1.jpg',
+                gin: '1.jpg',
+                roseWine: '1.jpg',
+                laundry: '1.jpg',
+                healthCenter: '1.jpg',
+            };
+            return images[category] || 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80';
+        }
+
+        function getImageForItem(itemName, category) {
+            const itemImages = {
+                "Tea": "3.jpg",
+                "Turkish Coffee": "3.jpg",
+                "Instant Coffee": "3.jpg",
+                "Espresso": "3.jpg",
+                "Double Espresso": "3.jpg",
+                "Americano": "3.jpg",
+                "Latte": "3.jpg",
+                "Mochiato": "3.jpg",
+                "Hot Chocolate": "3.jpg",
+                "Nesquick": "3.jpg",
+                "Hot Milk": "3.jpg",
+                "Cappuccino": "3.jpg",
+                "Water 0.5L": "3.jpg",
+                "Water 1L": "3.jpg",
+                "Ayran": "3.jpg",
+                "Coca Cola Zero": "3.jpg",
+                "Coca Cola": "3.jpg",
+                "Salgam": "3.jpg",
+                "Mineral Water": "3.jpg",
+                "Fanta": "3.jpg",
+                "Sprite": "3.jpg",
+                "Ice Tea": "3.jpg",
+                "Tamek Fruit Juice": "3.jpg",
+                "Red Bull": "3.jpg",
+                "Big Bull": "3.jpg",
+                "Freshly Drink": "3.jpg",
+                "Mix Atom Juice": "3.jpg",
+                "Mojito (No Alcohol)": "3.jpg",
+                "Orange Juice": "3.jpg",
+                "Milk Banana": "3.jpg",
+                "Mixed Greens Salad":"3.jpg",
+                "Shepperd Salad": "3.jpg",
+                "Ceaser Salad": "3.jpg",
+                "Tuna Fish Salad": "3.jpg",
+                "Taboull": "3.jpg",
+                "Fettush": "3.jpg",
+                "Meat Humus": "3.jpg",
+                "Humus": "3.jpg",
+                "Mixed Mezee Plate": "3.jpg",
+                "Nuts": "3.jpg",
+                "Cacik": "3.jpg",
+                "Yogurt": "3.jpg",
+                "Red Lentil Soup": "3.jpg",
+                "Tomato Soup": "3.jpg",
+                "Open Buffet Breakfast": "3.jpg",
+                "Breakfast": "3.jpg",
+                "Open Buffet Lunch": "3.jpg",
+                "Open Buffet Dinner":"3.jpg",
+                "Lamb Chops": "3.jpg",
+                "Chicken Sauteed": "3.jpg",
+                "Lamb Shish": "3.jpg",
+                "Chicken Shish":"3.jpg",
+                "Mixed Grill": "3.jpg",
+                "Urfa Kebap": "3.jpg",
+                "Breakfast Plate": "3.jpg",
+                "Fajita Meat": "3.jpg",
+                "Fajita Chicken": "3.jpg",
+                "Chicken Breast": "3.jpg",
+                "Rice":  "3.jpg",
+                "Cake Service":  "3.jpg",
+                "Breast Lamb":  "3.jpg",
+                "Rooster":  "3.jpg",
+                "Turkey":  "3.jpg",
+                "Entrecote Steak": "3.jpg",
+                "Ice Cream":  "3.jpg",
+                "Fresh Fruit Plate": "3.jpg",
+                "Hot Chocolate Cake":  "3.jpg",
+                "Kunefe":  "3.jpg",
+                "Baklava":  "3.jpg",
+                "Ekler Cake":  "3.jpg",
+                "Cake":  "3.jpg",
+                "Beef Sandwich":  "3.jpg",
+                "Chicken Sandwich":  "3.jpg",
+                "Cheeseburger":  "3.jpg",
+                "Hamburger":  "3.jpg",
+                "French Fries":  "3.jpg",
+                "Penne Arabiatta":  "3.jpg",
+                "Spaghetti Bolognes":  "3.jpg",
+                "Spaghetti Napolitan":  "3.jpg",
+                "Fettuchini Al Funghi":  "3.jpg",
+                "Fettuchini Alfredo":  "3.jpg",
+                "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)":  "3.jpg",
+                "Pizza Margherita (Tomatoes, Mozzarella)":  "3.jpg",
+                "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)":  "3.jpg",
+                "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)": "3.jpg",
+                "Pizza Chicken (Mozzarella, Chicken)":  "3.jpg",
+                "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)":  "3.jpg",
+                "Watermelon":  "3.jpg",
+                "All Other Fruits":  "3.jpg",
+                "Crixus Private Mix 2":  "3.jpg",
+                "Classic":  "3.jpg",
+                "Mint Gum":  "3.jpg",
+                "Lemon Mint":  "3.jpg",
+                "English":  "3.jpg",
+                "Two Apple":  "3.jpg",
+                "Bounty":  "3.jpg",
+                "Baghdady":  "3.jpg",
+                "Efes":  "3.jpg",
+                "Heineken":  "3.jpg",
+                "Miller":  "3.jpg",
+                "Budweiser":  "3.jpg",
+                "Tuborg":  "3.jpg",
+                "Corona":  "3.jpg",
+                "Carlsberg":  "3.jpg",
+                "Piccini Rosso Toscana 75cl":  "3.jpg",
+                "JP Chennet Red Wine 25cl":  "3.jpg",
+                "JP Chennet White Wine 25cl":  "3.jpg",
+                "Ksara Sunset Rose 75cl":  "3.jpg",
+                "Piccini Sangiovesa 75cl":  "3.jpg",
+                "JW Blue Label 20cl":  "3.jpg",
+                "JW Blue Label 1L":  "3.jpg",
+                "JW Gold Label 20cl":  "3.jpg",
+                "JW Gold Label 1L":  "3.jpg",
+                "JW Platinum 20cl":  "3.jpg",
+                "JW Platinum 1L":  "3.jpg",
+                "JW Black Label 20cl":  "3.jpg",
+                "JW Black Label 1L":  "3.jpg",
+                "JW Double Black 1L":  "3.jpg",
+                "JW Red Label 20cl":  "3.jpg",
+                "JW Red Label 1L":  "3.jpg",
+                "Chivas 12 20cl": "3.jpg",
+                "Chivas 12 1L":  "3.jpg",
+                "Chivas 18 20cl":  "3.jpg",
+                "Chivas 18 1L":  "3.jpg",
+                "Jack Daniels 20cl":  "3.jpg",
+                "Jack Daniels 1L":  "3.jpg",
+                "Famous Grouse 1L":  "3.jpg",
+                "Jameson 1L":  "3.jpg",
+                "Gentleman Jack 1L":  "3.jpg",
+                "Jim Beam 1L":  "3.jpg",
+                "Glenfiddich 12 1L":  "3.jpg",
+                "Tekirdag Gold 1L":  "3.jpg",
+                "Tekirdag Gold 20cl":  "3.jpg",
+                "Tekirdag Fresh Grape 20cl":  "3.jpg",
+                "Tekirdag Fresh Grape 1L":  "3.jpg",
+                "Yeni Raki 20cl":  "3.jpg",
+                "Yeni Raki 1L":  "3.jpg",
+                "Yeni Raki Ustalarin Karisimi":  "3.jpg",
+                "Uzo Gold 20cl":  "3.jpg",
+                "Uzo 7 20cl":  "3.jpg",
+                "Uzo 7 1L":  "3.jpg",
+                "Toma Raki 14cl":  "3.jpg",
+                "Toma Raki 50cl":  "3.jpg",
+                "Beylerbeyi 20cl":  "3.jpg",
+                "Beylerbeyi 1L":  "3.jpg",
+                "Karak 20cl":  "3.jpg",
+                "Bacardi 1L":  "3.jpg",
+                "Bacardi 5cl":  "3.jpg",
+                "Hennessy 5cl":  "3.jpg",
+                "Safari 5cl":  "3.jpg",
+                "Baileys 5cl":  "3.jpg",
+                "Malibu 5cl":  "3.jpg",
+                "Belvedere 20cl":  "3.jpg",
+                "Belvedere 1L":  "3.jpg",
+                "Grey Goose 20cl":  "3.jpg",
+                "Grey Goose 1L":  "3.jpg",
+                "Absolut 1L":  "3.jpg",
+                "Absolut 20cl":  "3.jpg",
+                "Absolut 5cl":  "3.jpg",
+                "Mojito":  "3.jpg",
+                "Crixus Health":  "3.jpg",
+                "Jager Bom":  "3.jpg",
+                "Negroni":  "3.jpg",
+                "Angaria":  "3.jpg",
+                "Sex on the Beach":  "3.jpg",
+                "Cosmopolitan":  "3.jpg",
+                "Dry Martini":  "3.jpg",
+                "Caipirinha":  "3.jpg",
+                "Bloody Mary":  "3.jpg",
+                "Martini Bianco 5cl":  "3.jpg",
+                "Jagermeister 5cl":  "3.jpg",
+                "Olmeca 1L":  "3.jpg",
+                "Olmeca Shot":  "3.jpg",
+                "Bombay 5cl":  "3.jpg",
+                "Beefeater 5cl":  "3.jpg",
+                "Shirt":  "3.jpg",
+                "Suit":  "3.jpg",
+                "Trousers":  "3.jpg",
+                "Underwear":  "3.jpg",
+                "Pool":  "3.jpg",
+                "Steam Room":  "3.jpg",
+                "Turkish Hamam":  "3.jpg",
+                "Fitness Center":  "3.jpg",
+                "Massage":  "3.jpg",
+                "Health Center Member 1 Month":  "3.jpg",
+                "Health Center Member 6 Months":  "3.jpg",
+                "Health Center Member 1 Year":  "3.jpg",
+            };
+            
+            return itemImages[itemName] || getImageForCategory(category);
+        }
+        
+        const translations = {
+            en: {
+                back: "← Back to Menu",
+                items: "items",
+                item: "item",
+                hotDrinks: "Hot Drinks",
+                coldDrinks: "Cold Drinks",
+                appetizer: "Appetizers",
+                soup: "Soups",
+                mainCourse: "Main Course",
+                deserts: "Desserts",
+                sandwiches: "Sandwiches",
+                pasta: "Pasta",
+                pizza: "Pizza",
+                hookhas: "Hookah",
+                beer: "Beer",
+                redWine: "Red Wine",
+                whiteWine: "White Wine",
+                whisky: "Whisky",
+                raki: "Raki",
+                rom: "Rum",
+                cognac: "Cognac",
+                liqur: "Liqueur",
+                vodka: "Vodka",
+                cocktails: "Cocktails",
+                vermouth: "Vermouth",
+                tequila: "Tequila",
+                gin: "Cin",
+                roseWine: "Rose Wine",
+                laundry: "Laundry",
+                healthCenter: "Crixus Health Center",
+                "Tea": "Tea",
+                "Turkish Coffee": "Turkish Coffee",
+                "Instant Coffee": "Instant Coffee",
+                "Espresso": "Espresso",
+                "Double Espresso": "Double Espresso",
+                "Americano": "Americano",
+                "Latte": "Latte",
+                "Mochiato": "Macchiato",
+                "Hot Chocolate": "Hot Chocolate",
+                "Nesquick": "Nesquick",
+                "Hot Milk": "Hot Milk",
+                "Cappuccino": "Cappuccino",
+                "Water 0.5L": "Water 0.5L",
+                "Water 1L": "Water 1L",
+                "Ayran": "Ayran",
+                "Coca Cola Zero": "Coca Cola Zero",
+                "Coca Cola": "Coca Cola",
+                "Salgam": "Turnip Juice",
+                "Mineral Water": "Mineral Water",
+                "Fanta": "Fanta",
+                "Sprite": "Sprite",
+                "Ice Tea": "Ice Tea",
+                "Tamek Fruit Juice": "Tamek Fruit Juice",
+                "Red Bull": "Red Bull",
+                "Big Bull": "Big Bull",
+                "Freshly Drink": "Fresh Juice",
+                "Mix Atom Juice": "Mixed Juice",
+                "Mojito (No Alcohol)": "Mojito (No Alcohol)",
+                "Orange Juice": "Orange Juice",
+                "Milk Banana": "Banana Milkshake",
+                "Mixed Greens Salad": "Mixed Greens Salad",
+                "Shepperd Salad": "Shepherd Salad",
+                "Ceaser Salad": "Caesar Salad",
+                "Tuna Fish Salad": "Tuna Salad",
+                "Taboull": "Tabbouleh",
+                "Fettush": "Fattoush",
+                "Meat Humus": "Meat Hummus",
+                "Humus": "Hummus",
+                "Mixed Mezee Plate": "Mixed Mezze Plate",
+                "Nuts": "Nuts",
+                "Cacik": "Tzatziki",
+                "Yogurt": "Yogurt",
+                "Red Lentil Soup": "Red Lentil Soup",
+                "Tomato Soup": "Tomato Soup",
+                "Open Buffet Breakfast": "Open Buffet Breakfast",
+                "Breakfast": "Breakfast",
+                "Open Buffet Lunch": "Open Buffet Lunch",
+                "Open Buffet Dinner": "Open Buffet Dinner",
+                "Lamb Chops": "Lamb Chops",
+                "Chicken Sauteed": "Chicken Sauteed",
+                "Lamb Shish": "Lamb Shish",
+                "Chicken Shish": "Chicken Shish",
+                "Mixed Grill": "Mixed Grill",
+                "Urfa Kebap": "Urfa Kebab",
+                "Breakfast Plate": "Breakfast Plate",
+                "Fajita Meat": "Beef Fajita",
+                "Fajita Chicken": "Chicken Fajita",
+                "Chicken Breast": "Chicken Breast",
+                "Rice": "Rice",
+                "Cake Service": "Cake Service",
+                "Breast Lamb": "Lamb Breast",
+                "Rooster": "Rooster",
+                "Turkey": "Turkey",
+                "Entrecote Steak": "Entrecote Steak",
+                "Ice Cream": "Ice Cream",
+                "Fresh Fruit Plate": "Fresh Fruit Plate",
+                "Hot Chocolate Cake": "Hot Chocolate Cake",
+                "Kunefe": "Kunefe",
+                "Baklava": "Baklava",
+                "Ekler Cake": "Eclair Cake",
+                "Cake": "Cake",
+                "Beef Sandwich": "Beef Sandwich",
+                "Chicken Sandwich": "Chicken Sandwich",
+                "Cheeseburger": "Cheeseburger",
+                "Hamburger": "Hamburger",
+                "French Fries": "French Fries",
+                "Penne Arabiatta": "Penne Arrabiata",
+                "Spaghetti Bolognes": "Spaghetti Bolognese",
+                "Spaghetti Napolitan": "Spaghetti Napolitana",
+                "Fettuchini Al Funghi": "Fettuccine Mushroom",
+                "Fettuchini Alfredo": "Fettuccine Alfredo",
+                "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)": "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)",
+                "Pizza Margherita (Tomatoes, Mozzarella)": "Pizza Margherita (Tomatoes, Mozzarella)",
+                "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)": "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)",
+                "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)": "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)",
+                "Pizza Chicken (Mozzarella, Chicken)": "Pizza Chicken (Mozzarella, Chicken)",
+                "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)": "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)",
+                "Watermelon": "Watermelon",
+                "All Other Fruits": "All Other Fruits",
+                "Crixus Private Mix 2": "Crixus Private Mix 2",
+                "Classic": "Classic",
+                "Mint Gum": "Mint Gum",
+                "Lemon Mint": "Lemon Mint",
+                "English": "English",
+                "Two Apple": "Double Apple",
+                "Bounty": "Bounty",
+                "Baghdady": "Baghdadi",
+                "Efes": "Efes",
+                "Heineken": "Heineken",
+                "Miller": "Miller",
+                "Budweiser": "Budweiser",
+                "Tuborg": "Tuborg",
+                "Corona": "Corona",
+                "Carlsberg": "Carlsberg",
+                "Piccini Rosso Toscana 75cl": "Piccini Rosso Toscana 75cl",
+                "JP Chennet Red Wine 25cl": "JP Chennet Red Wine 25cl",
+                "JP Chennet White Wine 25cl": "JP Chennet White Wine 25cl",
+                "Ksara Sunset Rose 75cl": "Ksara Sunset Rose 75cl",
+                "Piccini Sangiovesa 75cl": "Piccini Sangiovesa 75cl",
+                "JW Blue Label 20cl": "JW Blue Label 20cl",
+                "JW Blue Label 1L": "JW Blue Label 1L",
+                "JW Gold Label 20cl": "JW Gold Label 20cl",
+                "JW Gold Label 1L": "JW Gold Label 1L",
+                "JW Platinum 20cl": "JW Platinum 20cl",
+                "JW Platinum 1L": "JW Platinum 1L",
+                "JW Black Label 20cl": "JW Black Label 20cl",
+                "JW Black Label 1L": "JW Black Label 1L",
+                "JW Double Black 1L": "JW Double Black 1L",
+                "JW Red Label 20cl": "JW Red Label 20cl",
+                "JW Red Label 1L": "JW Red Label 1L",
+                "Chivas 12 20cl": "Chivas 12 20cl",
+                "Chivas 12 1L": "Chivas 12 1L",
+                "Chivas 18 20cl": "Chivas 18 20cl",
+                "Chivas 18 1L": "Chivas 18 1L",
+                "Jack Daniels 20cl": "Jack Daniels 20cl",
+                "Jack Daniels 1L": "Jack Daniels 1L",
+                "Famous Grouse 1L": "Famous Grouse 1L",
+                "Jameson 1L": "Jameson 1L",
+                "Gentleman Jack 1L": "Gentleman Jack 1L",
+                "Jim Beam 1L": "Jim Beam 1L",
+                "Glenfiddich 12 1L": "Glenfiddich 12 1L",
+                "Tekirdag Gold 1L": "Tekirdag Gold 1L",
+                "Tekirdag Gold 20cl": "Tekirdag Gold 20cl",
+                "Tekirdag Fresh Grape 20cl": "Tekirdag Fresh Grape 20cl",
+                "Tekirdag Fresh Grape 1L": "Tekirdag Fresh Grape 1L",
+                "Yeni Raki 20cl": "Yeni Raki 20cl",
+                "Yeni Raki 1L": "Yeni Raki 1L",
+                "Yeni Raki Ustalarin Karisimi": "Yeni Raki Masters Mix",
+                "Uzo Gold 20cl": "Ouzo Gold 20cl",
+                "Uzo 7 20cl": "Ouzo 7 20cl",
+                "Uzo 7 1L": "Ouzo 7 1L",
+                "Toma Raki 14cl": "Toma Raki 14cl",
+                "Toma Raki 50cl": "Toma Raki 50cl",
+                "Beylerbeyi 20cl": "Beylerbeyi 20cl",
+                "Beylerbeyi 1L": "Beylerbeyi 1L",
+                "Karak 20cl": "Karak 20cl",
+                "Bacardi 1L": "Bacardi 1L",
+                "Bacardi 5cl": "Bacardi 5cl",
+                "Hennessy 5cl": "Hennessy 5cl",
+                "Safari 5cl": "Safari 5cl",
+                "Baileys 5cl": "Baileys 5cl",
+                "Malibu 5cl": "Malibu 5cl",
+                "Belvedere 20cl": "Belvedere 20cl",
+                "Belvedere 1L": "Belvedere 1L",
+                "Grey Goose 20cl": "Grey Goose 20cl",
+                "Grey Goose 1L": "Grey Goose 1L",
+                "Absolut 1L": "Absolut 1L",
+                "Absolut 20cl": "Absolut 20cl",
+                "Absolut 5cl": "Absolut 5cl",
+                "Mojito": "Mojito",
+                "Crixus Health": "Crixus Health",
+                "Jager Bom": "Jager Bomb",
+                "Negroni": "Negroni",
+                "Angaria": "Angaria",
+                "Sex on the Beach": "Sex on the Beach",
+                "Cosmopolitan": "Cosmopolitan",
+                "Dry Martini": "Dry Martini",
+                "Caipirinha": "Caipirinha",
+                "Bloody Mary": "Bloody Mary",
+                "Martini Bianco 5cl": "Martini Bianco 5cl",
+                "Jagermeister 5cl": "Jägermeister 5cl",
+                "Olmeca 1L": "Olmeca 1L",
+                "Olmeca Shot": "Olmeca Shot",
+                "Bombay 5cl": "Bombay 5cl",
+                "Beefeater 5cl": "Beefeater 5cl",
+                "Shirt": "Shirt",
+                "Suit": "Suit",
+                "Trousers": "Trousers",
+                "Underwear": "Underwear",
+                "Pool": "Pool",
+                "Steam Room": "Steam Room",
+                "Turkish Hamam": "Turkish Hamam",
+                "Fitness Center": "Fitness Center",
+                "Massage": "Massage",
+                "Health Center Member 1 Month": "Health Center Member 1 Month",
+                "Health Center Member 6 Months": "Health Center Member 6 Months",
+                "Health Center Member 1 Year": "Health Center Member 1 Year"
+            },
+            ar: {
+                back: "→ العودة للقائمة",
+                items: "عناصر",
+                item: "عنصر",
+                hotDrinks: "المشروبات الساخنة",
+                coldDrinks: "المشروبات الباردة",
+                appetizer: "المقبلات",
+                soup: "الشوربات",
+                mainCourse: "الأطباق الرئيسية",
+                deserts: "الحلويات",
+                sandwiches: "السندويشات",
+                pasta: "المعكرونة",
+                pizza: "البيتزا",
+                hookhas: "الأركيلة",
+                beer: "البيرة",
+                redWine: "النبيذ الأحمر",
+                whiteWine: "النبيذ الأبيض",
+                whisky: "الويسكي",
+                raki: "الراكي",
+                rom: "الروم",
+                cognac: "الكونياك",
+                liqur: "الليكيور",
+                vodka: "الفودكا",
+                cocktails: "الكوكتيلات",
+                vermouth: "الفيرموث",
+                tequila: "التيكيلا",
+                gin: "الجن",
+                roseWine: "النبيذ الوردي",
+                laundry: "خدمة الغسيل",
+                healthCenter: "مركز كريكسوس الصحي",
+                "Tea": "شاي",
+                "Turkish Coffee": "قهوة تركية",
+                "Instant Coffee": "قهوة سريعة",
+                "Espresso": "إسبريسو",
+                "Double Espresso": "إسبريسو مزدوج",
+                "Americano": "أمريكانو",
+                "Latte": "لاتيه",
+                "Mochiato": "ماكياتو",
+                "Hot Chocolate": "شوكولاتة ساخنة",
+                "Nesquick": "نسكويك",
+                "Hot Milk": "حليب ساخن",
+                "Cappuccino": "كابتشينو",
+                "Water 0.5L": "ماء نصف لتر",
+                "Water 1L": "ماء لتر",
+                "Ayran": "عيران",
+                "Coca Cola Zero": "كوكا كولا زيرو",
+                "Coca Cola": "كوكا كولا",
+                "Salgam": "شلغم",
+                "Mineral Water": "ماء معدني",
+                "Fanta": "فانتا",
+                "Sprite": "سبرايت",
+                "Ice Tea": "شاي مثلج",
+                "Tamek Fruit Juice": "عصير فواكه تاميك",
+                "Red Bull": "ريد بول",
+                "Big Bull": "بيج بول",
+                "Freshly Drink": "عصير طازج",
+                "Mix Atom Juice": "عصير مشكل",
+                "Mojito (No Alcohol)": "موهيتو (بدون كحول)",
+                "Orange Juice": "عصير برتقال",
+                "Milk Banana": "ميلك شيك موز",
+                "Mixed Greens Salad": "سلطة خضراء مشكلة",
+                "Shepperd Salad": "سلطة راعي",
+                "Ceaser Salad": "سلطة قيصر",
+                "Tuna Fish Salad": "سلطة تونة",
+                "Taboull": "تبولة",
+                "Fettush": "فتوش",
+                "Meat Humus": "حمص باللحم",
+                "Humus": "حمص",
+                "Mixed Mezee Plate": "صحن مزة مشكل",
+                "Nuts": "مكسرات",
+                "Cacik": "جاجيك",
+                "Yogurt": "لبن",
+                "Red Lentil Soup": "شوربة عدس أحمر",
+                "Tomato Soup": "شوربة طماطم",
+                "Open Buffet Breakfast": "بوفيه إفطار مفتوح",
+                "Breakfast": "فطور",
+                "Open Buffet Lunch": "بوفيه غداء مفتوح",
+                "Open Buffet Dinner": "بوفيه عشاء مفتوح",
+                "Lamb Chops": "ريش خروف",
+                "Chicken Sauteed": "دجاج سوتيه",
+                "Lamb Shish": "شيش لحم",
+                "Chicken Shish": "شيش دجاج",
+                "Mixed Grill": "مشاوي مشكلة",
+                "Urfa Kebap": "كباب أورفا",
+                "Breakfast Plate": "صحن فطور",
+                "Fajita Meat": "فاهيتا لحم",
+                "Fajita Chicken": "فاهيتا دجاج",
+                "Chicken Breast": "صدر دجاج",
+                "Rice": "أرز",
+                "Cake Service": "خدمة كيك",
+                "Breast Lamb": "صدر خروف",
+                "Rooster": "ديك رومي",
+                "Turkey": "ديك حبش",
+                "Entrecote Steak": "ستيك أنتريكوت",
+                "Ice Cream": "آيس كريم",
+                "Fresh Fruit Plate": "صحن فواكه طازجة",
+                "Hot Chocolate Cake": "كيك شوكولاتة ساخنة",
+                "Kunefe": "كنافة",
+                "Baklava": "بقلاوة",
+                "Ekler Cake": "كيك إكلير",
+                "Cake": "كيك",
+                "Beef Sandwich": "ساندويش لحم",
+                "Chicken Sandwich": "ساندويش دجاج",
+                "Cheeseburger": "تشيز برغر",
+                "Hamburger": "هامبرغر",
+                "French Fries": "بطاطس مقلية",
+                "Penne Arabiatta": "بيني أرابياتا",
+                "Spaghetti Bolognes": "سباغيتي بولونيز",
+                "Spaghetti Napolitan": "سباغيتي نابوليتان",
+                "Fettuchini Al Funghi": "فيتوتشيني فطر",
+                "Fettuchini Alfredo": "فيتوتشيني ألفريدو",
+                "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)": "بيتزا كريكسوس مشكلة (موتزاريلا، لحم، خضار ودجاج)",
+                "Pizza Margherita (Tomatoes, Mozzarella)": "بيتزا مارغريتا (طماطم، موتزاريلا)",
+                "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)": "بيتزا ببروني (سجق، موتزاريلا، فلفل أخضر)",
+                "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)": "بيتزا خضار (طماطم، موتزاريلا، فطر)",
+                "Pizza Chicken (Mozzarella, Chicken)": "بيتزا دجاج (موتزاريلا، دجاج)",
+                "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)": "بيتزا مكسيكي (موتزاريلا، سجق، صوص حار)",
+                "Watermelon": "بطيخ",
+                "All Other Fruits": "جميع الفواكه الأخرى",
+                "Crixus Private Mix 2": "خلطة كريكسوس الخاصة ٢",
+                "Classic": "كلاسيك",
+                "Mint Gum": "نعناع علكة",
+                "Lemon Mint": "ليمون نعناع",
+                "English": "إنجليزي",
+                "Two Apple": "تفاحتين",
+                "Bounty": "باونتي",
+                "Baghdady": "بغدادي",
+                "Efes": "إيفيس",
+                "Heineken": "هاينكن",
+                "Miller": "ميلر",
+                "Budweiser": "بودوايزر",
+                "Tuborg": "توبورغ",
+                "Corona": "كورونا",
+                "Carlsberg": "كارلسبرغ",
+                "Piccini Rosso Toscana 75cl": "بيتشيني روسو توسكانا 75 سل",
+                "JP Chennet Red Wine 25cl": "جي بي شينيه نبيذ أحمر 25 سل",
+                "JP Chennet White Wine 25cl": "جي بي شينيه نبيذ أبيض 25 سل",
+                "Ksara Sunset Rose 75cl": "كسارة غروب وردي 75 سل",
+                "Piccini Sangiovesa 75cl": "بيتشيني سانجوفيزا 75 سل",
+                "JW Blue Label 20cl": "جي دبليو أزرق 20 سل",
+                "JW Blue Label 1L": "جي دبليو أزرق 1 لتر",
+                "JW Gold Label 20cl": "جي دبليو ذهبي 20 سل",
+                "JW Gold Label 1L": "جي دبليو ذهبي 1 لتر",
+                "JW Platinum 20cl": "جي دبليو بلاتينيوم 20 سل",
+                "JW Platinum 1L": "جي دبليو بلاتينيوم 1 لتر",
+                "JW Black Label 20cl": "جي دبليو أسود 20 سل",
+                "JW Black Label 1L": "جي دبليو أسود 1 لتر",
+                "JW Double Black 1L": "جي دبليو دبل بلاك 1 لتر",
+                "JW Red Label 20cl": "جي دبليو أحمر 20 سل",
+                "JW Red Label 1L": "جي دبليو أحمر 1 لتر",
+                "Chivas 12 20cl": "شيفاز 12 سنة 20 سل",
+                "Chivas 12 1L": "شيفاز 12 سنة 1 لتر",
+                "Chivas 18 20cl": "شيفاز 18 سنة 20 سل",
+                "Chivas 18 1L": "شيفاز 18 سنة 1 لتر",
+                "Jack Daniels 20cl": "جاك دانيلز 20 سل",
+                "Jack Daniels 1L": "جاك دانيلز 1 لتر",
+                "Famous Grouse 1L": "فيموس غراوس 1 لتر",
+                "Jameson 1L": "جيمسون 1 لتر",
+                "Gentleman Jack 1L": "جنتلمان جاك 1 لتر",
+                "Jim Beam 1L": "جيم بيم 1 لتر",
+                "Glenfiddich 12 1L": "غلينفيديش 12 سنة 1 لتر",
+                "Tekirdag Gold 1L": "تكيرداغ ذهبي 1 لتر",
+                "Tekirdag Gold 20cl": "تكيرداغ ذهبي 20 سل",
+                "Tekirdag Fresh Grape 20cl": "تكيرداغ عنب طازج 20 سل",
+                "Tekirdag Fresh Grape 1L": "تكيرداغ عنب طازج 1 لتر",
+                "Yeni Raki 20cl": "راكي يني 20 سل",
+                "Yeni Raki 1L": "راكي يني 1 لتر",
+                "Yeni Raki Ustalarin Karisimi": "راكي يني خلطة الأساتذة",
+                "Uzo Gold 20cl": "أوزو ذهبي 20 سل",
+                "Uzo 7 20cl": "أوزو 7 سنوات 20 سل",
+                "Uzo 7 1L": "أوزو 7 سنوات 1 لتر",
+                "Toma Raki 14cl": "توما راكي 14 سل",
+                "Toma Raki 50cl": "توما راكي 50 سل",
+                "Beylerbeyi 20cl": "بيلربيي 20 سل",
+                "Beylerbeyi 1L": "بيلربيي 1 لتر",
+                "Karak 20cl": "كاراك 20 سل",
+                "Bacardi 1L": "باكاردي 1 لتر",
+                "Bacardi 5cl": "باكاردي 5 سل",
+                "Hennessy 5cl": "هينيسي 5 سل",
+                "Safari 5cl": "سفاري 5 سل",
+                "Baileys 5cl": "بيليز 5 سل",
+                "Malibu 5cl": "ماليبو 5 سل",
+                "Belvedere 20cl": "بلفيدير 20 سل",
+                "Belvedere 1L": "بلفيدير 1 لتر",
+                "Grey Goose 20cl": "غراي غوس 20 سل",
+                "Grey Goose 1L": "غراي غوس 1 لتر",
+                "Absolut 1L": "أبسولوت 1 لتر",
+                "Absolut 20cl": "أبسولوت 20 سل",
+                "Absolut 5cl": "أبسولوت 5 سل",
+                "Mojito": "موهيتو",
+                "Crixus Health": "صحة كريكسوس",
+                "Jager Bom": "جيجر بومب",
+                "Negroni": "نيغروني",
+                "Angaria": "أنغاريا",
+                "Sex on the Beach": "سكس أون ذا بيتش",
+                "Cosmopolitan": "كوزموبوليتان",
+                "Dry Martini": "مارتيني جاف",
+                "Caipirinha": "كايبيرينيا",
+                "Bloody Mary": "بلادي ماري",
+                "Martini Bianco 5cl": "مارتيني بيانكو 5 سل",
+                "Jagermeister 5cl": "جيجرمايستر 5 سل",
+                "Olmeca 1L": "أولميكا 1 لتر",
+                "Olmeca Shot": "أولميكا شوت",
+                "Bombay 5cl": "بومباي 5 سل",
+                "Beefeater 5cl": "بيفيتر 5 سل",
+                "Shirt": "قميص",
+                "Suit": "بدلة",
+                "Trousers": "بنطال",
+                "Underwear": "ملابس داخلية",
+                "Pool": "مسبح",
+                "Steam Room": "غرفة بخار",
+                "Turkish Hamam": "حمام تركي",
+                "Fitness Center": "مركز لياقة",
+                "Massage": "تدليك",
+                "Health Center Member 1 Month": "عضوية المركز الصحي شهر واحد",
+                "Health Center Member 6 Months": "عضوية المركز الصحي 6 أشهر",
+                "Health Center Member 1 Year": "عضوية المركز الصحي سنة واحدة"
+            },
+            tr: {
+                back: "← Menüye Dön",
+                items: "öğe",
+                item: "öğe",
+                hotDrinks: "Sıcak İçecekler",
+                coldDrinks: "Soğuk İçecekler",
+                appetizer: "Mezeler",
+                soup: "Çorbalar",
+                mainCourse: "Ana Yemekler",
+                deserts: "Tatlılar",
+                sandwiches: "Sandviçler",
+                pasta: "Makarna",
+                pizza: "Pizza",
+                hookhas: "Nargile",
+                beer: "Bira",
+                redWine: "Kırmızı Şarap",
+                whiteWine: "Beyaz Şarap",
+                whisky: "Viski",
+                raki: "Rakı",
+                rom: "Rom",
+                cognac: "Konyak",
+                liqur: "Likör",
+                vodka: "Votka",
+                cocktails: "Kokteyller",
+                vermouth: "Vermut",
+                tequila: "Tekila",
+                gin: "Cin",
+                roseWine: "Roze Şarap",
+                laundry: "Çamaşır Servisi",
+                healthCenter: "Crixus Sağlık Merkezi",
+                "Tea": "Çay",
+                "Turkish Coffee": "Türk Kahvesi",
+                "Instant Coffee": "Hazır Kahve",
+                "Espresso": "Espresso",
+                "Double Espresso": "Çift Espresso",
+                "Americano": "Americano",
+                "Latte": "Latte",
+                "Mochiato": "Macchiato",
+                "Hot Chocolate": "Sıcak Çikolata",
+                "Nesquick": "Nesquick",
+                "Hot Milk": "Sıcak Süt",
+                "Cappuccino": "Cappuccino",
+                "Water 0.5L": "Su 0.5L",
+                "Water 1L": "Su 1L",
+                "Ayran": "Ayran",
+                "Coca Cola Zero": "Coca Cola Zero",
+                "Coca Cola": "Coca Cola",
+                "Salgam": "Şalgam",
+                "Mineral Water": "Maden Suyu",
+                "Fanta": "Fanta",
+                "Sprite": "Sprite",
+                "Ice Tea": "Ice Tea",
+                "Tamek Fruit Juice": "Tamek Meyve Suyu",
+                "Red Bull": "Red Bull",
+                "Big Bull": "Big Bull",
+                "Freshly Drink": "Taze Meyve Suyu",
+                "Mix Atom Juice": "Karışık Meyve Suyu",
+                "Mojito (No Alcohol)": "Mojito (Alkolsüz)",
+                "Orange Juice": "Portakal Suyu",
+                "Milk Banana": "Muzlu Süt",
+                "Mixed Greens Salad": "Karışık Yeşil Salata",
+                "Shepperd Salad": "Çoban Salata",
+                "Ceaser Salad": "Sezar Salata",
+                "Tuna Fish Salad": "Ton Balıklı Salata",
+                "Taboull": "Tabbule",
+                "Fettush": "Fettuş",
+                "Meat Humus": "Etli Humus",
+                "Humus": "Humus",
+                "Mixed Mezee Plate": "Karışık Meze Tabağı",
+                "Nuts": "Kuruyemiş",
+                "Cacik": "Cacık",
+                "Yogurt": "Yoğurt",
+                "Red Lentil Soup": "Mercimek Çorbası",
+                "Tomato Soup": "Domates Çorbası",
+                "Open Buffet Breakfast": "Açık Büfe Kahvaltı",
+                "Breakfast": "Kahvaltı",
+                "Open Buffet Lunch": "Açık Büfe Öğle Yemeği",
+                "Open Buffet Dinner": "Açık Büfe Akşam Yemeği",
+                "Lamb Chops": "Kuzu Pirzola",
+                "Chicken Sauteed": "Tavuk Sote",
+                "Lamb Shish": "Kuzu Şiş",
+                "Chicken Shish": "Tavuk Şiş",
+                "Mixed Grill": "Karışık Izgara",
+                "Urfa Kebap": "Urfa Kebap",
+                "Breakfast Plate": "Kahvaltı Tabağı",
+                "Fajita Meat": "Et Fajita",
+                "Fajita Chicken": "Tavuk Fajita",
+                "Chicken Breast": "Tavuk Göğsü",
+                "Rice": "Pirinç Pilavı",
+                "Cake Service": "Pasta Servisi",
+                "Breast Lamb": "Kuzu Göğsü",
+                "Rooster": "Horoz",
+                "Turkey": "Hindi",
+                "Entrecote Steak": "Antrikot",
+                "Ice Cream": "Dondurma",
+                "Fresh Fruit Plate": "Taze Meyve Tabağı",
+                "Hot Chocolate Cake": "Sıcak Çikolatalı Kek",
+                "Kunefe": "Künefe",
+                "Baklava": "Baklava",
+                "Ekler Cake": "Ekler",
+                "Cake": "Pasta",
+                "Beef Sandwich": "Etli Sandviç",
+                "Chicken Sandwich": "Tavuklu Sandviç",
+                "Cheeseburger": "Cheeseburger",
+                "Hamburger": "Hamburger",
+                "French Fries": "Patates Kızartması",
+                "Penne Arabiatta": "Penne Arrabiata",
+                "Spaghetti Bolognes": "Spaghetti Bolonez",
+                "Spaghetti Napolitan": "Spaghetti Napoli",
+                "Fettuchini Al Funghi": "Mantarlı Fettuccine",
+                "Fettuchini Alfredo": "Fettuccine Alfredo",
+                "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)": "Pizza Crixus Karışık (Mozzarella, Et, Sebze ve Tavuk)",
+                "Pizza Margherita (Tomatoes, Mozzarella)": "Pizza Margherita (Domates, Mozzarella)",
+                "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)": "Pizza Pepperoni (Sosis, Mozzarella, Yeşil Biber)",
+                "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)": "Pizza Sebzeli (Domates, Mozzarella, Mantar)",
+                "Pizza Chicken (Mozzarella, Chicken)": "Pizza Tavuklu (Mozzarella, Tavuk)",
+                "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)": "Pizza Meksika (Mozzarella, Sosis, Acı Sos)",
+                "Watermelon": "Karpuz",
+                "All Other Fruits": "Diğer Meyveler",
+                "Crixus Private Mix 2": "Crixus Özel Karışım 2",
+                "Classic": "Klasik",
+                "Mint Gum": "Nane Sakız",
+                "Lemon Mint": "Limon Nane",
+                "English": "İngiliz",
+                "Two Apple": "Çift Elma",
+                "Bounty": "Bounty",
+                "Baghdady": "Bağdat",
+                "Efes": "Efes",
+                "Heineken": "Heineken",
+                "Miller": "Miller",
+                "Budweiser": "Budweiser",
+                "Tuborg": "Tuborg",
+                "Corona": "Corona",
+                "Carlsberg": "Carlsberg",
+                "Piccini Rosso Toscana 75cl": "Piccini Rosso Toscana 75cl",
+                "JP Chennet Red Wine 25cl": "JP Chennet Kırmızı Şarap 25cl",
+                "JP Chennet White Wine 25cl": "JP Chennet Beyaz Şarap 25cl",
+                "Ksara Sunset Rose 75cl": "Ksara Sunset Rose 75cl",
+                "Piccini Sangiovesa 75cl": "Piccini Sangiovesa 75cl",
+                "JW Blue Label 20cl": "JW Blue Label 20cl",
+                "JW Blue Label 1L": "JW Blue Label 1L",
+                "JW Gold Label 20cl": "JW Gold Label 20cl",
+                "JW Gold Label 1L": "JW Gold Label 1L",
+                "JW Platinum 20cl": "JW Platinum 20cl",
+                "JW Platinum 1L": "JW Platinum 1L",
+                "JW Black Label 20cl": "JW Black Label 20cl",
+                "JW Black Label 1L": "JW Black Label 1L",
+                "JW Double Black 1L": "JW Double Black 1L",
+                "JW Red Label 20cl": "JW Red Label 20cl",
+                "JW Red Label 1L": "JW Red Label 1L",
+                "Chivas 12 20cl": "Chivas 12 20cl",
+                "Chivas 12 1L": "Chivas 12 1L",
+                "Chivas 18 20cl": "Chivas 18 20cl",
+                "Chivas 18 1L": "Chivas 18 1L",
+                "Jack Daniels 20cl": "Jack Daniels 20cl",
+                "Jack Daniels 1L": "Jack Daniels 1L",
+                "Famous Grouse 1L": "Famous Grouse 1L",
+                "Jameson 1L": "Jameson 1L",
+                "Gentleman Jack 1L": "Gentleman Jack 1L",
+                "Jim Beam 1L": "Jim Beam 1L",
+                "Glenfiddich 12 1L": "Glenfiddich 12 1L",
+                "Tekirdag Gold 1L": "Tekirdağ Altın 1L",
+                "Tekirdag Gold 20cl": "Tekirdağ Altın 20cl",
+                "Tekirdag Fresh Grape 20cl": "Tekirdağ Taze Üzüm 20cl",
+                "Tekirdag Fresh Grape 1L": "Tekirdağ Taze Üzüm 1L",
+                "Yeni Raki 20cl": "Yeni Rakı 20cl",
+                "Yeni Raki 1L": "Yeni Rakı 1L",
+                "Yeni Raki Ustalarin Karisimi": "Yeni Rakı Ustaların Karışımı",
+                "Uzo Gold 20cl": "Uzo Altın 20cl",
+                "Uzo 7 20cl": "Uzo 7 20cl",
+                "Uzo 7 1L": "Uzo 7 1L",
+                "Toma Raki 14cl": "Toma Rakı 14cl",
+                "Toma Raki 50cl": "Toma Rakı 50cl",
+                "Beylerbeyi 20cl": "Beylerbeyi 20cl",
+                "Beylerbeyi 1L": "Beylerbeyi 1L",
+                "Karak 20cl": "Karak 20cl",
+                "Bacardi 1L": "Bacardi 1L",
+                "Bacardi 5cl": "Bacardi 5cl",
+                "Hennessy 5cl": "Hennessy 5cl",
+                "Safari 5cl": "Safari 5cl",
+                "Baileys 5cl": "Baileys 5cl",
+                "Malibu 5cl": "Malibu 5cl",
+                "Belvedere 20cl": "Belvedere 20cl",
+                "Belvedere 1L": "Belvedere 1L",
+                "Grey Goose 20cl": "Grey Goose 20cl",
+                "Grey Goose 1L": "Grey Goose 1L",
+                "Absolut 1L": "Absolut 1L",
+                "Absolut 20cl": "Absolut 20cl",
+                "Absolut 5cl": "Absolut 5cl",
+                "Mojito": "Mojito",
+                "Crixus Health": "Crixus Sağlık",
+                "Jager Bom": "Jager Bomb",
+                "Negroni": "Negroni",
+                "Angaria": "Angaria",
+                "Sex on the Beach": "Sex on the Beach",
+                "Cosmopolitan": "Cosmopolitan",
+                "Dry Martini": "Dry Martini",
+                "Caipirinha": "Caipirinha",
+                "Bloody Mary": "Bloody Mary",
+                "Martini Bianco 5cl": "Martini Bianco 5cl",
+                "Jagermeister 5cl": "Jägermeister 5cl",
+                "Olmeca 1L": "Olmeca 1L",
+                "Olmeca Shot": "Olmeca Shot",
+                "Bombay 5cl": "Bombay 5cl",
+                "Beefeater 5cl": "Beefeater 5cl",
+                "Shirt": "Gömlek",
+                "Suit": "Takım Elbise",
+                "Trousers": "Pantolon",
+                "Underwear": "İç Çamaşırı",
+                "Pool": "Havuz",
+                "Steam Room": "Buhar Odası",
+                "Turkish Hamam": "Türk Hamamı",
+                "Fitness Center": "Fitness Merkezi",
+                "Massage": "Masaj",
+                "Health Center Member 1 Month": "Sağlık Merkezi Üyelik 1 Ay",
+                "Health Center Member 6 Months": "Sağlık Merkezi Üyelik 6 Ay",
+                "Health Center Member 1 Year": "Sağlık Merkezi Üyelik 1 Yıl"
+            },
+            ku: {
+                back: "→ گەڕانەوە بۆ مینیو",
+                items: "بابەت",
+                item: "بابەت",
+                hotDrinks: "خواردنەوەی گەرم",
+                coldDrinks: "خواردنەوەی سارد",
+                appetizer: "خواردنی سەرەتایی",
+                soup: "شۆربا",
+                mainCourse: "خواردنی سەرەکی",
+                deserts: "شیرینی",
+                sandwiches: "ساندویچ",
+                pasta: "پاستا",
+                pizza: "پیتزا",
+                hookhas: "نارگیلە",
+                beer: "بیرە",
+                redWine: "شەرابی سوور",
+                whiteWine: "شەرابی سپی",
+                whisky: "ویسکی",
+                raki: "ڕاکی",
+                rom: "ڕۆم",
+                cognac: "کۆنیاک",
+                liqur: "لیکۆر",
+                vodka: "ڤۆدکا",
+                cocktails: "کۆکتێل",
+                vermouth: "ڤێرمۆت",
+                tequila: "تێکیلا",
+                gin: "جین",
+                roseWine: "شەرابی گوڵاوی",
+                laundry: "خزمەتگوزاری شوشتن",
+                healthCenter: "ناوەندی تەندروستی کریکسوس",
+                "Tea": "چا",
+                "Turkish Coffee": "قاوەی تورکی",
+                "Instant Coffee": "قاوەی خێرا",
+                "Espresso": "ئیسپرێسۆ",
+                "Double Espresso": "ئیسپرێسۆی دووبارە",
+                "Americano": "ئەمەریکانۆ",
+                "Latte": "لاتێ",
+                "Mochiato": "ماکیاتۆ",
+                "Hot Chocolate": "شۆکلاتی گەرم",
+                "Nesquick": "نێسکویک",
+                "Hot Milk": "شیری گەرم",
+                "Cappuccino": "کاپۆچینۆ",
+                "Water 0.5L": "ئاو 0.5 لیتر",
+                "Water 1L": "ئاو 1 لیتر",
+                "Ayran": "ئەیران",
+                "Coca Cola Zero": "کۆکا کۆلا زیرۆ",
+                "Coca Cola": "کۆکا کۆلا",
+                "Salgam": "شەلغەم",
+                "Mineral Water": "ئاوی مەعدەنی",
+                "Fanta": "فانتا",
+                "Sprite": "سپرایت",
+                "Ice Tea": "چای سەهۆڵاو",
+                "Tamek Fruit Juice": "شەربەتی تامێک",
+                "Red Bull": "ڕێد بول",
+                "Big Bull": "بیگ بول",
+                "Freshly Drink": "شەربەتی تازە",
+                "Mix Atom Juice": "شەربەتی تێکەڵ",
+                "Mojito (No Alcohol)": "مۆهیتۆ (بێ کحول)",
+                "Orange Juice": "شەربەتی پرتەقاڵ",
+                "Milk Banana": "شەربەتی مۆز",
+                "Mixed Greens Salad": "زەڵاتەی سەوزەی تێکەڵ",
+                "Shepperd Salad": "زەڵاتەی شوان",
+                "Ceaser Salad": "زەڵاتەی قەیسەر",
+                "Tuna Fish Salad": "زەڵاتەی تۆنە",
+                "Taboull": "تەبوولە",
+                "Fettush": "فەتووش",
+                "Meat Humus": "حەمووسی گۆشت",
+                "Humus": "حەمووس",
+                "Mixed Mezee Plate": "لێفتی مەزەی تێکەڵ",
+                "Nuts": "خشکە مێوە",
+                "Cacik": "جاجیک",
+                "Yogurt": "ماست",
+                "Red Lentil Soup": "شۆربای نیسکی سوور",
+                "Tomato Soup": "شۆربای تەماتە",
+                "Open Buffet Breakfast": "بوفێی کراوەی ناشتای بەیانی",
+                "Breakfast": "ناشتای بەیانی",
+                "Open Buffet Lunch": "بوفێی کراوەی نانی نیوەڕۆ",
+                "Open Buffet Dinner": "بوفێی کراوەی شا",
+                "Lamb Chops": "پسێکی بەران",
+                "Chicken Sauteed": "مریشکی سۆتێ",
+                "Lamb Shish": "شیشی بەران",
+                "Chicken Shish": "شیشی مریشک",
+                "Mixed Grill": "بریانی تێکەڵ",
+                "Urfa Kebap": "کەبابی ئوورفا",
+                "Breakfast Plate": "تەبەقی ناشتای بەیانی",
+                "Fajita Meat": "فاهیتای گۆشت",
+                "Fajita Chicken": "فاهیتای مریشک",
+                "Chicken Breast": "سنگی مریشک",
+                "Rice": "برنج",
+                "Cake Service": "خزمەتگوزاری کەیک",
+                "Breast Lamb": "سنگی بەران",
+                "Rooster": "کەڵەشێر",
+                "Turkey": "بووقەڵەموون",
+                "Entrecote Steak": "ئەنترەکۆت",
+                "Ice Cream": "بەستەنی",
+                "Fresh Fruit Plate": "تەبەقی میوەی تازە",
+                "Hot Chocolate Cake": "کەیکی شۆکلاتی گەرم",
+                "Kunefe": "کونافە",
+                "Baklava": "باقڵەوە",
+                "Ekler Cake": "کەیکی ئێکلێر",
+                "Cake": "کەیک",
+                "Beef Sandwich": "ساندویچی گۆشت",
+                "Chicken Sandwich": "ساندویچی مریشک",
+                "Cheeseburger": "برگری پەنیر",
+                "Hamburger": "هامبورگەر",
+                "French Fries": "پەتاتەی سۆرکراو",
+                "Penne Arabiatta": "پێنی ئەڕابیاتا",
+                "Spaghetti Bolognes": "سپاگێتی بۆلۆنێز",
+                "Spaghetti Napolitan": "سپاگێتی ناپۆلیتان",
+                "Fettuchini Al Funghi": "فێتووچینی قارچ",
+                "Fettuchini Alfredo": "فێتووچینی ئالفرێدۆ",
+                "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)": "پیتزای کریکسوس تێکەڵ (مۆزارێلا، گۆشت، سەوزە و مریشک)",
+                "Pizza Margherita (Tomatoes, Mozzarella)": "پیتزای مارگەریتا (تەماتە، مۆزارێلا)",
+                "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)": "پیتزای پێپەرۆنی (سۆسیج، مۆزارێلا، بیبەری سەوز)",
+                "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)": "پیتزای سەوزە (تەماتە، مۆزارێلا، قارچ)",
+                "Pizza Chicken (Mozzarella, Chicken)": "پیتزای مریشک (مۆزارێلا، مریشک)",
+                "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)": "پیتزای مەکسیکی (مۆزارێلا، سۆسیج، سۆسی تیژ)",
+                "Watermelon": "زەبەسە",
+                "All Other Fruits": "هەموو میوەکانی تر",
+                "Crixus Private Mix 2": "تێکەڵەی تایبەتی کریکسوس ٢",
+                "Classic": "کلاسیک",
+                "Mint Gum": "سامکی پونە",
+                "Lemon Mint": "لیمۆ پونە",
+                "English": "ئینگلیزی",
+                "Two Apple": "دوو سێو",
+                "Bounty": "باونتی",
+                "Baghdady": "بەغدایی",
+                "Efes": "ئێفێس",
+                "Heineken": "هاینێکێن",
+                "Miller": "میلەر",
+                "Budweiser": "بودوایزەر",
+                "Tuborg": "توبۆرگ",
+                "Corona": "کۆرۆنا",
+                "Carlsberg": "کارلسبێرگ",
+                "Piccini Rosso Toscana 75cl": "پیچینی ڕۆسۆ تۆسکانا 75 سل",
+                "JP Chennet Red Wine 25cl": "جی پی شێنێت شەرابی سوور 25 سل",
+                "JP Chennet White Wine 25cl": "جی پی شێنێت شەرابی سپی 25 سل",
+                "Ksara Sunset Rose 75cl": "کسارا سانسێت ڕۆز 75 سل",
+                "Piccini Sangiovesa 75cl": "پیچینی سانجیۆڤێسا 75 سل",
+                "JW Blue Label 20cl": "جی دبلیو شینی 20 سل",
+                "JW Blue Label 1L": "جی دبلیو شینی 1 لیتر",
+                "JW Gold Label 20cl": "جی دبلیو زێڕینی 20 سل",
+                "JW Gold Label 1L": "جی دبلیو زێڕینی 1 لیتر",
+                "JW Platinum 20cl": "جی دبلیو پلاتینیوم 20 سل",
+                "JW Platinum 1L": "جی دبلیو پلاتینیوم 1 لیتر",
+                "JW Black Label 20cl": "جی دبلیو ڕەش 20 سل",
+                "JW Black Label 1L": "جی دبلیو ڕەش 1 لیتر",
+                "JW Double Black 1L": "جی دبلیو دووبل بلاک 1 لیتر",
+                "JW Red Label 20cl": "جی دبلیو سوور 20 سل",
+                "JW Red Label 1L": "جی دبلیو سوور 1 لیتر",
+                "Chivas 12 20cl": "شیڤاس 12 ساڵ 20 سل",
+                "Chivas 12 1L": "شیڤاس 12 ساڵ 1 لیتر",
+                "Chivas 18 20cl": "شیڤاس 18 ساڵ 20 سل",
+                "Chivas 18 1L": "شیڤاس 18 ساڵ 1 لیتر",
+                "Jack Daniels 20cl": "جاک دانیێلز 20 سل",
+                "Jack Daniels 1L": "جاک دانیێلز 1 لیتر",
+                "Famous Grouse 1L": "فێمۆس گڕاوس 1 لیتر",
+                "Jameson 1L": "جێمسۆن 1 لیتر",
+                "Gentleman Jack 1L": "جێنتڵمان جاک 1 لیتر",
+                "Jim Beam 1L": "جیم بیم 1 لیتر",
+                "Glenfiddich 12 1L": "گلێنفیدیش 12 ساڵ 1 لیتر",
+                "Tekirdag Gold 1L": "تێکیرداغ زێڕین 1 لیتر",
+                "Tekirdag Gold 20cl": "تێکیرداغ زێڕین 20 سل",
+                "Tekirdag Fresh Grape 20cl": "تێکیرداغ ترێی تازە 20 سل",
+                "Tekirdag Fresh Grape 1L": "تێکیرداغ ترێی تازە 1 لیتر",
+                "Yeni Raki 20cl": "یێنی ڕاکی 20 سل",
+                "Yeni Raki 1L": "یێنی ڕاکی 1 لیتر",
+                "Yeni Raki Ustalarin Karisimi": "یێنی ڕاکی تێکەڵەی مامۆستایان",
+                "Uzo Gold 20cl": "ئوزۆ زێڕین 20 سل",
+                "Uzo 7 20cl": "ئوزۆ 7 ساڵ 20 سل",
+                "Uzo 7 1L": "ئوزۆ 7 ساڵ 1 لیتر",
+                "Toma Raki 14cl": "تۆما ڕاکی 14 سل",
+                "Toma Raki 50cl": "تۆما ڕاکی 50 سل",
+                "Beylerbeyi 20cl": "بەیلەربەیی 20 سل",
+                "Beylerbeyi 1L": "بەیلەربەیی 1 لیتر",
+                "Karak 20cl": "کاراک 20 سل",
+                "Bacardi 1L": "باکاردی 1 لیتر",
+                "Bacardi 5cl": "باکاردی 5 سل",
+                "Hennessy 5cl": "هێنێسی 5 سل",
+                "Safari 5cl": "سافاری 5 سل",
+                "Baileys 5cl": "بەیلیز 5 سل",
+                "Malibu 5cl": "مالیبوو 5 سل",
+                "Belvedere 20cl": "بێلڤێدێر 20 سل",
+                "Belvedere 1L": "بێلڤێدێر 1 لیتر",
+                "Grey Goose 20cl": "گرێی گووس 20 سل",
+                "Grey Goose 1L": "گرێی گووس 1 لیتر",
+                "Absolut 1L": "ئابسۆلوت 1 لیتر",
+                "Absolut 20cl": "ئابسۆلوت 20 سل",
+                "Absolut 5cl": "ئابسۆلوت 5 سل",
+                "Mojito": "مۆهیتۆ",
+                "Crixus Health": "تەندروستی کریکسوس",
+                "Jager Bom": "جاگەر بۆمب",
+                "Negroni": "نێگرۆنی",
+                "Angaria": "ئەنگاریا",
+                "Sex on the Beach": "سێکس ئۆن ذە بیچ",
+                "Cosmopolitan": "کۆزمۆپۆلیتان",
+                "Dry Martini": "مارتینی وشک",
+                "Caipirinha": "کایپیرینیا",
+                "Bloody Mary": "بلادی مێری",
+                "Martini Bianco 5cl": "مارتینی بیانکۆ 5 سل",
+                "Jagermeister 5cl": "یاگەرمایستەر 5 سل",
+                "Olmeca 1L": "ئۆلمێکا 1 لیتر",
+                "Olmeca Shot": "ئۆلمێکا شۆت",
+                "Bombay 5cl": "بۆمبای 5 سل",
+                "Beefeater 5cl": "بیفیتەر 5 سل",
+                "Shirt": "کراس",
+                "Suit": "قات",
+                "Trousers": "پانتۆڵ",
+                "Underwear": "جلی ژوورەوە",
+                "Pool": "مەلەوانگە",
+                "Steam Room": "ژووری هەڵم",
+                "Turkish Hamam": "حەمامی تورکی",
+                "Fitness Center": "ناوەندی فیتنێس",
+                "Massage": "ماساژ",
+                "Health Center Member 1 Month": "ئەندامێتی ناوەندی تەندروستی 1 مانگ",
+                "Health Center Member 6 Months": "ئەندامێتی ناوەندی تەندروستی 6 مانگ",
+                "Health Center Member 1 Year": "ئەندامێتی ناوەندی تەندروستی 1 ساڵ"
+            }
+        };
+
+        const menuData = {
+            hotDrinks: [
+                { name: "Tea", price: 2 },
+                { name: "Turkish Coffee", price: 4 },
+                { name: "Instant Coffee", price: 4 },
+                { name: "Espresso", price: 4 },
+                { name: "Double Espresso", price: 6 },
+                { name: "Americano", price: 4 },
+                { name: "Latte", price: 4 },
+                { name: "Mochiato", price: 4 },
+                { name: "Hot Chocolate", price: 4 },
+                { name: "Nesquick", price: 4 },
+                { name: "Hot Milk", price: 4 },
+                { name: "Cappuccino", price: 4 }
+            ],
+            coldDrinks: [
+                { name: "Water 0.5L", price: 1 },
+                { name: "Water 1L", price: 2 },
+                { name: "Ayran", price: 3 },
+                { name: "Coca Cola Zero", price: 4 },
+                { name: "Coca Cola", price: 4 },
+                { name: "Salgam", price: 4 },
+                { name: "Mineral Water", price: 4 },
+                { name: "Fanta", price: 4 },
+                { name: "Sprite", price: 4 },
+                { name: "Ice Tea", price: 4 },
+                { name: "Tamek Fruit Juice", price: 4 },
+                { name: "Red Bull", price: 5 },
+                { name: "Big Bull", price: 2 },
+                { name: "Freshly Drink", price: 5 },
+                { name: "Mix Atom Juice", price: 8 },
+                { name: "Mojito (No Alcohol)", price: 5 },
+                { name: "Orange Juice", price: 5 },
+                { name: "Milk Banana", price: 5 }
+            ],
+            appetizer: [
+                { name: "Mixed Greens Salad", price: 5 },
+                { name: "Shepperd Salad", price: 5 },
+                { name: "Ceaser Salad", price: 10 },
+                { name: "Tuna Fish Salad", price: 10 },
+                { name: "Taboull", price: 5 },
+                { name: "Fettush", price: 5 },
+                { name: "Meat Humus", price: 10 },
+                { name: "Humus", price: 5 },
+                { name: "Mixed Mezee Plate", price: 6 },
+                { name: "Nuts", price: 2 },
+                { name: "Cacik", price: 3 },
+                { name: "Yogurt", price: 3 }
+            ],
+            soup: [
+                { name: "Red Lentil Soup", price: 5 },
+                { name: "Tomato Soup", price: 5 }
+            ],
+            mainCourse: [
+                { name: "Open Buffet Breakfast", price: 25 },
+                { name: "Breakfast", price: 15 },
+                { name: "Open Buffet Lunch", price: 35 },
+                { name: "Open Buffet Dinner", price: 40 },
+                { name: "Lamb Chops", price: 28 },
+                { name: "Chicken Sauteed", price: 20 },
+                { name: "Lamb Shish", price: 24 },
+                { name: "Chicken Shish", price: 22 },
+                { name: "Mixed Grill", price: 28 },
+                { name: "Urfa Kebap", price: 19 },
+                { name: "Breakfast Plate", price: 15 },
+                { name: "Fajita Meat", price: 20 },
+                { name: "Fajita Chicken", price: 15 },
+                { name: "Chicken Breast", price: 15 },
+                { name: "Rice", price: 2 },
+                { name: "Breast Lamb", price: 22 },
+                { name: "Rooster", price: 50 },
+                { name: "Turkey", price: 150 },
+                { name: "Entrecote Steak", price: 28 }
+            ],
+            deserts: [
+                { name: "Ice Cream", price: 5 },
+                { name: "Fresh Fruit Plate", price: 10 },
+                { name: "Hot Chocolate Cake", price: 6 },
+                { name: "Kunefe", price: 6 },
+                { name: "Baklava", price: 6 },
+                { name: "Ekler Cake", price: 6 },
+                { name: "Cake", price: 8 },
+                { name: "Cake Service", price: 20 }
+            ],
+            sandwiches: [
+                { name: "Beef Sandwich", price: 12 },
+                { name: "Chicken Sandwich", price: 10 },
+                { name: "Cheeseburger", price: 10 },
+                { name: "Hamburger", price: 10 },
+                { name: "French Fries", price: 5 }
+            ],
+            pasta: [
+                { name: "Penne Arabiatta", price: 10 },
+                { name: "Spaghetti Bolognes", price: 10 },
+                { name: "Spaghetti Napolitan", price: 10 },
+                { name: "Fettuchini Al Funghi", price: 10 },
+                { name: "Fettuchini Alfredo", price: 10 }
+            ],
+            pizza: [
+                { name: "Pizza Crixus Mix (Mozzarella, Meat, Vegetable & Chicken)", price: 15 },
+                { name: "Pizza Margherita (Tomatoes, Mozzarella)", price: 15 },
+                { name: "Pizza Pepperoni (Sausage, Mozzarella, Green Pepper)", price: 15 },
+                { name: "Pizza Vegetables (Tomatoes, Mozzarella, Mushrooms)", price: 15 },
+                { name: "Pizza Chicken (Mozzarella, Chicken)", price: 15 },
+                { name: "Pizza Mexican (Mozzarella, Sausage, Spice Sauce)", price: 15 }
+            ],
+            hookhas: [
+                { name: "Watermelon", price: 40 },
+                { name: "All Other Fruits", price: 30 },
+                { name: "Crixus Private Mix 2", price: 25 },
+                { name: "Classic", price: 20 },
+                { name: "Mint Gum", price: 20 },
+                { name: "Lemon Mint", price: 20 },
+                { name: "English", price: 20 },
+                { name: "Two Apple", price: 20 },
+                { name: "Bounty", price: 20 },
+                { name: "Baghdady", price: 20 }
+            ],
+            beer: [
+                { name: "Efes", price: 6 },
+                { name: "Heineken", price: 7 },
+                { name: "Miller", price: 7 },
+                { name: "Budweiser", price: 7 },
+                { name: "Tuborg", price: 7 },
+                { name: "Corona", price: 7 },
+                { name: "Carlsberg", price: 7 }
+            ],
+            redWine: [
+                { name: "Piccini Rosso Toscana 75cl", price: 30 },
+                { name: "JP Chennet Red Wine 25cl", price: 15 }
+            ],
+            whiteWine: [
+                { name: "JP Chennet White Wine 25cl", price: 15 }
+            ],
+            whisky: [
+                { name: "JW Blue Label 20cl", price: 90 },
+                { name: "JW Blue Label 1L", price: 320 },
+                { name: "JW Gold Label 20cl", price: 35 },
+                { name: "JW Gold Label 1L", price: 150 },
+                { name: "JW Platinum 20cl", price: 35 },
+                { name: "JW Platinum 1L", price: 180 },
+                { name: "JW Black Label 20cl", price: 20 },
+                { name: "JW Black Label 1L", price: 100 },
+                { name: "JW Double Black 1L", price: 120 },
+                { name: "JW Red Label 20cl", price: 20 },
+                { name: "JW Red Label 1L", price: 80 },
+                { name: "Chivas 12 20cl", price: 20 },
+                { name: "Chivas 12 1L", price: 120 },
+                { name: "Chivas 18 20cl", price: 35 },
+                { name: "Chivas 18 1L", price: 160 },
+                { name: "Jack Daniels 20cl", price: 20 },
+                { name: "Jack Daniels 1L", price: 80 },
+                { name: "Famous Grouse 1L", price: 50 },
+                { name: "Jameson 1L", price: 100 },
+                { name: "Gentleman Jack 1L", price: 100 },
+                { name: "Jim Beam 1L", price: 100 },
+                { name: "Glenfiddich 12 1L", price: 125 }
+            ],
+            raki: [
+                { name: "Tekirdag Gold 1L", price: 120 },
+                { name: "Tekirdag Gold 20cl", price: 30 },
+                { name: "Tekirdag Fresh Grape 20cl", price: 20 },
+                { name: "Tekirdag Fresh Grape 1L", price: 100 },
+                { name: "Yeni Raki 20cl", price: 20 },
+                { name: "Yeni Raki 1L", price: 100 },
+                { name: "Yeni Raki Ustalarin Karisimi", price: 100 },
+                { name: "Uzo Gold 20cl", price: 15 },
+                { name: "Uzo 7 20cl", price: 10 },
+                { name: "Uzo 7 1L", price: 50 },
+                { name: "Toma Raki 14cl", price: 10 },
+                { name: "Toma Raki 50cl", price: 35 },
+                { name: "Beylerbeyi 20cl", price: 30 },
+                { name: "Beylerbeyi 1L", price: 125 },
+                { name: "Karak 20cl", price: 20 }
+            ],
+            rom: [
+                { name: "Bacardi 1L", price: 60 },
+                { name: "Bacardi 5cl", price: 8 }
+            ],
+            cognac: [
+                { name: "Hennessy 5cl", price: 10 }
+            ],
+            liqur: [
+                { name: "Safari 5cl", price: 8 },
+                { name: "Baileys 5cl", price: 6 },
+                { name: "Malibu 5cl", price: 6 }
+            ],
+            vodka: [
+                { name: "Belvedere 20cl", price: 27 },
+                { name: "Belvedere 1L", price: 130 },
+                { name: "Grey Goose 20cl", price: 25 },
+                { name: "Grey Goose 1L", price: 110 },
+                { name: "Absolut 1L", price: 80 },
+                { name: "Absolut 20cl", price: 15 },
+                { name: "Absolut 5cl", price: 5 }
+            ],
+            cocktails: [
+                { name: "Mojito", price: 10 },
+                { name: "Crixus Health", price: 10 },
+                { name: "Jager Bom", price: 10 },
+                { name: "Negroni", price: 10 },
+                { name: "Angaria", price: 10 },
+                { name: "Sex on the Beach", price: 10 },
+                { name: "Cosmopolitan", price: 10 },
+                { name: "Dry Martini", price: 10 },
+                { name: "Caipirinha", price: 10 },
+                { name: "Bloody Mary", price: 10 }
+            ],
+            vermouth: [
+                { name: "Martini Bianco 5cl", price: 6 },
+                { name: "Jagermeister 5cl", price: 12 }
+            ],
+            tequila: [
+                { name: "Olmeca 1L", price: 80 },
+                { name: "Olmeca Shot", price: 8 }
+            ],
+            gin: [
+                { name: "Bombay 5cl", price: 8 },
+                { name: "Beefeater 5cl", price: 8 }
+            ],
+            roseWine: [
+                { name: "Ksara Sunset Rose 75cl", price: 30 },
+                { name: "Piccini Sangiovesa 75cl", price: 30 }
+            ],
+            laundry: [
+                { name: "Shirt", price: 1.5 },
+                { name: "Suit", price: 10 },
+                { name: "Trousers", price: 5 },
+                { name: "Underwear", price: 1 }
+            ],
+            healthCenter: [
+                { name: "Pool", price: 20 },
+                { name: "Steam Room", price: 20 },
+                { name: "Turkish Hamam", price: 20 },
+                { name: "Fitness Center", price: 20 },
+                { name: "Massage", price: 100 },
+                { name: "Health Center Member 1 Month", price: 300 },
+                { name: "Health Center Member 6 Months", price: 1500 },
+                { name: "Health Center Member 1 Year", price: 3000 }
+            ]
+        };
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+            
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            
+            if (document.getElementById('main-menu').style.display !== 'none') {
+                renderMainMenu();
+            } else {
+                const currentCategory = document.getElementById('category-title').getAttribute('data-category');
+                if (currentCategory) {
+                    showCategory(currentCategory);
+                }
+            }
+        }
+
+        function renderMainMenu() {
+            const mainMenu = document.getElementById('main-menu');
+            mainMenu.innerHTML = '';
+            
+            const categories = Object.keys(menuData);
+            categories.forEach(category => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => showCategory(category);
+                
+                const categoryName = translations[currentLanguage][category] || category;
+                const itemCount = menuData[category].length;
+                const imageSrc = getImageForCategory(category);
+                const itemsText = itemCount === 1 ? translations[currentLanguage].item : translations[currentLanguage].items;
+                
+                card.innerHTML = `
+                    <img src="${imageSrc}" alt="${categoryName}" class="category-image" 
+                         onclick="event.stopPropagation(); openImageModal('${imageSrc}')"
+                         onerror="this.src=''; this.style.display='none';">
+                    <div class="category-content">
+                        <h3 style="font-size: 26px; font-weight: bold; color: #d4af37; margin-bottom: 8px; text-align: center; letter-spacing: 1px;">${categoryName}</h3>
+                        <p style="color: #999; font-size: 15px; text-align: center;">${itemCount} ${itemsText}</p>
+                    </div>
+                `;
+                
+                mainMenu.appendChild(card);
+            });
+        }
+
+        function showCategory(category) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('category-details').style.display = 'block';
+            
+            const categoryTitle = document.getElementById('category-title');
+            categoryTitle.textContent = translations[currentLanguage][category] || category;
+            categoryTitle.setAttribute('data-category', category);
+            
+            const itemsContainer = document.getElementById('items-container');
+            itemsContainer.innerHTML = '';
+            
+            menuData[category].forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                const imageSrc = getImageForItem(item.name, category);
+                const translatedName = translations[currentLanguage][item.name] || item.name;
+                
+                itemCard.innerHTML = `
+                    <div class="item-image-container" onclick="event.stopPropagation(); openImageModal('${imageSrc}')">
+                        <img src="${imageSrc}" alt="${translatedName}" class="item-image"
+                             onerror="this.src=''; this.style.display='none';">
+                    </div>
+                    <div class="item-content">
+                        <div>
+                            <h4 style="font-size: 22px; font-weight: bold; color: #333; margin-bottom: 5px;">${translatedName}</h4>
+                        </div>
+                        <div class="price-tag">$${item.price}</div>
+                    </div>
+                `;
+                
+                itemsContainer.appendChild(itemCard);
+            });
+        }
+
+        function showMainMenu() {
+            document.getElementById('main-menu').style.display = 'grid';
+            document.getElementById('category-details').style.display = 'none';
+        }
+
+        async function onConfigChange(config) {
+            const restaurantTitle = document.getElementById('restaurant-title');
+            
+            restaurantTitle.textContent = config.restaurant_name || defaultConfig.restaurant_name;
+            restaurantTitle.style.color = config.primary_color || defaultConfig.primary_color;
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
+                                config.accent_color = value;
+                                window.elementSdk.setConfig({ accent_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["restaurant_name", config.restaurant_name || defaultConfig.restaurant_name],
+                    ["welcome_text", config.welcome_text || defaultConfig.welcome_text]
+                ])
+            });
+        }
+
+        renderMainMenu();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b2b2b6f90f71ee1',t:'MTc2NjUyNzYyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
